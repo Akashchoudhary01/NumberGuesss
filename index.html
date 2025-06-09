@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guess the Number</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 100px;
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Guess the Number</h2>
+    <h4>You Have Only 5 Attempts</h4>
+    <p>I’m thinking of a number between 1 and 100</p>
+
+    <input type="number" id="guessInput" placeholder="Your guess" />
+    <br />
+    <button id="submitBtn">Guess</button>
+
+    <div id="message"></div>
+
+    <h3>Previous Guesses</h3>
+    <p id="guessSlots"></p>
+
+    <h3>Remaining Attempts</h3>
+    <p id="remaningAttempts">5</p>
+  </div>
+
+  <script>
+    const input = document.getElementById("guessInput");
+    const message = document.getElementById("message");
+    const button = document.getElementById("submitBtn");
+    const guessSlots = document.getElementById("guessSlots");
+    const remaningAttempts = document.getElementById("remaningAttempts");
+
+    let guessCount = 0;
+    let prevGuesses = [];
+    const maxAttempts = 5;
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    console.log("Random Number:", randomNumber);
+
+    button.addEventListener("click", function () {
+      const userGuess = parseInt(input.value);
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+        message.textContent = "⛔ Please enter a number between 1 and 100.";
+        return;
+      }
+
+      guessCount++;
+      prevGuesses.push(userGuess);
+      guessSlots.textContent = prevGuesses.join(", ");
+      remaningAttempts.textContent = maxAttempts - guessCount;
+
+      if (userGuess === randomNumber) {
+        message.innerHTML = `🎉 Correct! You guessed the number in <strong>${guessCount}</strong> attempts.`;
+        endGame();
+      } else if (guessCount === maxAttempts) {
+        message.innerHTML = `💥 Game Over! The number was <strong>${randomNumber}</strong>.`;
+        endGame();
+      } else if (userGuess > randomNumber) {
+        message.textContent = "📈 Too high! Try again.";
+      } else {
+        message.textContent = "📉 Too low! Try again.";
+      }
+
+      input.value = "";
+    });
+
+    function endGame() {
+      input.disabled = true;
+      button.disabled = true;
+    }
+  </script>
+</body>
+
+</html>
